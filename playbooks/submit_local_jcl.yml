@@ -1,0 +1,29 @@
+---
+- name: Submit local JCL to JES2
+  hosts: zoslab
+  gather_facts: false
+  environment: "{{ environment_vars }}"
+  collections:
+    - ibm.ibm_zos_core
+
+  vars:
+    hlq: "{{ hlq }}"
+
+  tasks:
+    - name: Render JCL template to local file
+      ansible.builtin.template:
+        src: provdev.jcl.j2
+        dest: "{{ playbook_dir }}/tmp_jcl/rendered.jcl"
+      delegate_to: localhost
+      connection: local
+
+    - name: Submit rendered JCL
+      ibm.ibm_zos_core.zos_job_submit:
+        src: "{{ playbook_dir }}/tmp_jcl/rendered.jcl"
+        location: LOCAL
+        wait_time_s: 30
+      register: job_result
+
+    - name: Show job result
+      ansible.builtin.debug:
+        var: job_result

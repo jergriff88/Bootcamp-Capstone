@@ -1,0 +1,28 @@
+//GAMA17J  JOB ,'PROVISION FOR DEVS',
+//             CLASS=A,MSGCLASS=X,MSGLEVEL=(1,1),
+//             NOTIFY=&SYSUID
+//JCLLIB   JCLLIB ORDER=(&SYSUID..PROCLIB)
+// EXPORT SYMLIST=(HLQ)
+// SET HLQ=GAMA17
+//*********************************************************************
+//* RUN THE PROC MAKELIB TO CREATE SOURCE LIBRARIES FOR DEVELOPERS
+//*********************************************************************
+//DEVJCL   EXEC MAKELIB,LIBNAME=&HLQ..DEV.JCL,PRI=2,SEC=2
+//TSTJCL   EXEC MAKELIB,LIBNAME=&HLQ..TST.JCL
+//*********************************************************************
+//* SEED DEV JCL SOURCE LIBRARY WITH TEMPLATE AND HELLO
+//*********************************************************************
+//SEEDJCL  EXEC PGM=IEBCOPY,COND=(0,GT)
+//SYSPRINT DD SYSOUT=*
+//SYSOUT   DD SYSOUT=*
+//JCLSEED  DD DSN=&HLQ..LAB.SEED.JCL,DISP=SHR
+//JCLOUT   DD DSN=&HLQ..DEV.JCL,DISP=SHR
+//SYSIN    DD *
+COPYOPER COPY OUTDD=JCLOUT,INDD=JCLSEED
+         SELECT MEMBER=(TEMP,HELLO)
+/*
+//*********************************************************************
+//* RUN THE PROC MAKEPLIB TO CREATE PROGRAM LIBRARIES FOR DEVELOPERS
+//*********************************************************************
+//DEVPROG  EXEC MAKEPLIB,LIBNAME=&HLQ..DEV.PROGLIB,PRI=10,SEC=4
+//TSTPROG  EXEC MAKEPLIB,LIBNAME=&HLQ..TST.PROGLIB,PRI=3,SEC=2
