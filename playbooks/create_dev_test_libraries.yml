@@ -1,0 +1,65 @@
+---
+- name: Create DEV and TEST libraries for existing z/OS users
+  hosts: zoslab
+  gather_facts: false
+
+  environment: "{{ environment_vars }}"
+
+  collections:
+    - ibm.ibm_zos_core
+
+  vars:
+    user_hlqs:
+      - USER01
+      - USER02
+      - USER03
+
+    environments:
+      - DEV
+      - TEST
+
+    # racf_group: TEAM01
+    # connect_users_to_racf_group: false
+
+  tasks:
+    - name: Create DEV and TEST JCL libraries
+      ibm.ibm_zos_core.zos_data_set:
+        name: "{{ item.0 }}.{{ item.1 }}.JCL"
+        type: pdse
+        state: present
+        space_primary: 5
+        space_secondary: 2
+        space_type: trk
+        record_format: fb
+        record_length: 80
+        block_size: 0
+        replace: false
+      loop: "{{ user_hlqs | product(environments) | list }}"
+      loop_control:
+        label: "{{ item.0 }}.{{ item.1 }}.JCL"
+      register: library_results
+
+    - name: Display DEV and TEST library results
+      ansible.builtin.debug:
+        msg: >-
+          Library {{ item.item.0 }}.{{ item.item.1 }}.JCL
+          changed={{ item.changed }}
+      loop: "{{ library_results.results }}"
+      loop_control:
+        label: "{{ item.item.0 }}.{{ item.item.1 }}.JCL"
+
+    # - name: Connect users to RACF group TEAM01
+    #   ibm.ibm_zos_core.zos_tso_command:
+    #     commands:
+    #       - "CONNECT {{ item }} GROUP({{ racf_group }})"
+    #     max_rc: 4
+    #   loop: "{{ user_hlqs }}"
+    #   loop_control:
+    #     label: "Connect {{ item }} to {{ racf_group }}"
+    #   when: connect_users_to_racf_group | bool
+    #   register: racf_group_results
+
+    # - name: Display RACF group connection results
+    #   ansible.builtin.debug:
+    #     var: racf_group_results
+    #   when: connect_users_to_racf_group | bool
