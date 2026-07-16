@@ -1,7 +1,7 @@
-
-PYZ: "/usr/lpp/IBM/cyp/v3r11/pyz"
-ZOAU: "/usr/lpp/IBM/zoautil"
-FILE_XFER_DIR: "../data"
+---
+pyz: /usr/lpp/IBM/cyp/v3r11/pyz
+zoau: /usr/lpp/IBM/zoautil
+file_xfer_dir: ../data
 
 environment_vars:
   _BPXK_AUTOCVT: "ON"
@@ -9,12 +9,10 @@ environment_vars:
   PYTHONPATH: "{{ ZOAU }}/lib/3.11"
   LIBPATH: "{{ ZOAU }}/lib:{{ PYZ }}/lib:/lib:/usr/lib:."
   PATH: "{{ ZOAU }}/bin:{{ PYZ }}/bin:/bin:/var/bin"
-  _CEE_RUNOPTS: "FILETAG(AUTOCVT,AUTOTAG) POSIX(ON)"
-  _TAG_REDIR_ERR: "txt"
-  _TAG_REDIR_IN: "txt"
-  _TAG_REDIR_OUT: "txt"
-  LANG: "C"
-  PYTHONSTDINENCODING: "cp1047"
-  PYTHONIOENCODING: "utf-8"
-
-
+  _CEE_RUNOPTS: FILETAG(AUTOCVT,AUTOTAG) POSIX(ON)
+  _TAG_REDIR_ERR: txt
+  _TAG_REDIR_IN: txt
+  _TAG_REDIR_OUT: txt
+  LANG: C
+  PYTHONSTDINENCODING: cp1047
+  PYTHONIOENCODING: utf-8

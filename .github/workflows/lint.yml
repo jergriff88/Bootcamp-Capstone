@@ -1,0 +1,46 @@
+---
+name: Ansible Linter Workflow
+
+on:
+  push:
+    branches-ignore: [main] # Runs on pushes to ANY branch except main
+  pull_request:
+    branches: [main] # Runs on PRs targeting main
+  workflow_dispatch: # Allows manual triggering
+
+jobs:
+  ci:
+    name: Code Quality
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install ansible-core ansible-lint molecule
+
+      - name: Install Ansible Collections
+        run: ansible-galaxy collection install -r requirements.yml
+
+      - name: Ansible Lint
+        id: lint
+        continue-on-error: true
+        run: |
+          ansible-lint .
+          echo "If there are any linting issues, run 'ansible-lint --fix' locally to fix them and recommit."
+
+      # - name: Molecule Test
+      #   run: molecule test # Run Molecule tests
+
+      - name: Fail job if lint had issues
+        if: steps.lint.outcome == 'failure'
+        run: |-
+          echo "::error::Ansible Lint reported issues — check the 'Ansible Lint' step output above."
+          exit 1

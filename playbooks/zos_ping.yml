@@ -6,9 +6,9 @@
 
   tasks:
     - name: Pinging host
-      ping: {}
+      ansible.builtin.ping: {}
       register: result
-      
+
     - name: Response
-      debug:
+      ansible.builtin.debug:
         msg: "{{ result.ping }}"

@@ -3,8 +3,6 @@
   hosts: zoslab
   gather_facts: false
   environment: "{{ environment_vars }}"
-  collections:
-    - ibm.ibm_zos_core
 
   vars:
     hlq: "{{ hlq }}"
@@ -14,6 +12,7 @@
       ansible.builtin.template:
         src: provdev.jcl.j2
         dest: "{{ playbook_dir }}/tmp_jcl/rendered.jcl"
+        mode: "0644"
       delegate_to: localhost
       connection: local
 

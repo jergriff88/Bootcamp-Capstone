@@ -1,12 +1,11 @@
 ---
-# debug 
+# debug
 - name: Show destination
-  debug:
-    msg: 
-      "{{ hlq }}.{{ mlq }}.{{ library }}({{ member.path | basename | splitext | first | upper }})"
+  ansible.builtin.debug:
+    msg: "{{ hlq }}.{{ mlq }}.{{ library }}({{ member.path | basename | splitext | first | upper }})"
 # end debug
 
-- name: Copy {{ member.path | basename }} to {{ library }}
+- name: Copy member to {{ [library, member.path | basename] | join('/') }}
   block:
     - name: Copy member
       ibm.ibm_zos_core.zos_copy:
@@ -14,11 +13,10 @@
         dest: >-
           {{ hlq }}.{{ mlq }}.{{ library }}({{ member.path | basename | splitext | first | upper }})
         remote_src: false
-      register: copy_result
+      register: zos_seed_library_copy_result
   rescue:
     - name: Report failure
       ansible.builtin.debug:
         msg: >
           FAILED: "{{ member.path | basename }}" -> "{{ hlq }}.{{ mlq }}.{{ library }}"
-          Reason: "{{ ansible_failed_result.msg }}     
-
+          Reason: "{{ ansible_failed_result.msg }}"

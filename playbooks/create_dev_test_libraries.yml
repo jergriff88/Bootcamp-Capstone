@@ -5,9 +5,6 @@
 
   environment: "{{ environment_vars }}"
 
-  collections:
-    - ibm.ibm_zos_core
-
   vars:
     user_hlqs:
       - USER01
@@ -48,7 +45,7 @@
     - name: Verify DEV and TEST libraries exist
       ibm.ibm_zos_core.zos_tso_command:
         commands:
-          - "LISTCAT ENTRIES('{{ item.0 }}.{{ item.1 }}.JCL')"
+          - LISTCAT ENTRIES('{{ item.0 }}.{{ item.1 }}.JCL')
       loop: "{{ user_hlqs | product(environments) | list }}"
       loop_control:
         label: "{{ item.0 }}.{{ item.1 }}.JCL"
@@ -60,4 +57,3 @@
       loop: "{{ verify_results.results }}"
       loop_control:
         label: "{{ item.item.0 }}.{{ item.item.1 }}.JCL"
-        

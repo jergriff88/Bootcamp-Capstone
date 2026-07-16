@@ -1,6 +1,6 @@
 ---
 - name: Validate inputs
-  assert:
+  ansible.builtin.assert:
     that:
       - dataset_name | length > 0
       - local_file | length > 0
@@ -9,21 +9,23 @@
   ansible.builtin.file:
     path: "{{ local_dir }}"
     state: directory
+    mode: "0755"
   delegate_to: 127.0.0.1
 
-- name: Run command on USS command line 
-  ansible.builtin.command: 
+- name: Run command on USS command line
+  ansible.builtin.command:
     cmd: echo ok
+  changed_when: false
 
-
-- debug:
+- name: Display dataset name
+  ansible.builtin.debug:
     msg:
-      - "dataset_name={{ dataset_name }}"
+      - dataset_name={{ dataset_name }}
 
 - name: Fetch dataset from z/OS
   ibm.ibm_zos_core.zos_fetch:
     src: "{{ dataset_name }}"
-    dest: "./{{ local_dir }}/{{ local_file }}"
+    dest: ./{{ local_dir }}/{{ local_file }}
     is_binary: false
     encoding:
       from: IBM-1047
