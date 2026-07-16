@@ -1,3 +1,22 @@
 *.pub
 id_rsa
 vault.yml
+
+# Terraform working directory
+**/.terraform/*
+
+# Terraform state
+**/*.tfstate
+**/*.tfstate.*
+
+# Terraform plan files
+**/tfplan
+**/*.tfplan
+
+# Local Terraform variable files
+**/terraform.tfvars
+**/*.auto.tfvars
+
+# Crash logs
+crash.log
+crash.*.log
