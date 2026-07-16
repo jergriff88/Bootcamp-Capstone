@@ -29,7 +29,17 @@ jobs:
         run: ansible-galaxy collection install -r requirements.yml
 
       - name: Ansible Lint
-        run: ansible-lint --fix . # Code quality check and fixing
+        id: lint
+        continue-on-error: true
+        run: |
+          ansible-lint .
+          echo "If there are any linting issues, run 'ansible-lint --fix .' locally to fix them and recommit."
       
       - name: Molecule Test
         run: molecule test  # Run Molecule tests
+
+      - name: Fail job if lint had issues
+        if: steps.lint.outcome == 'failure'
+        run: |
+          echo "::error::Ansible Lint reported issues — check the 'Ansible Lint' step output above."
+          exit 1
