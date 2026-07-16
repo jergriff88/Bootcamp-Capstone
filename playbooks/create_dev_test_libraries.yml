@@ -14,9 +14,11 @@
     environments:
       - DEV
       - TEST
+    libraries: "{{ user_hlqs | product(environments) | list }}"
 
   tasks:
     - name: Create DEV and TEST JCL libraries
+      tags: create_libraries
       ibm.ibm_zos_core.zos_data_set:
         name: "{{ item.0 }}.{{ item.1 }}.JCL"
         type: pdse
@@ -28,12 +30,13 @@
         record_length: 80
         block_size: 0
         replace: false
-      loop: "{{ user_hlqs | product(environments) | list }}"
+      loop: "{{ libraries }}"
       loop_control:
         label: "{{ item.0 }}.{{ item.1 }}.JCL"
       register: library_results
 
     - name: Display DEV and TEST library creation results
+      tags: create_libraries
       ansible.builtin.debug:
         msg: >-
           Library {{ item.item.0 }}.{{ item.item.1 }}.JCL
@@ -43,6 +46,7 @@
         label: "{{ item.item.0 }}.{{ item.item.1 }}.JCL"
 
     - name: Verify DEV and TEST libraries exist
+      tags: verify_libraries
       ibm.ibm_zos_core.zos_tso_command:
         commands:
           - LISTCAT ENTRIES('{{ item.0 }}.{{ item.1 }}.JCL')
@@ -50,8 +54,11 @@
       loop_control:
         label: "{{ item.0 }}.{{ item.1 }}.JCL"
       register: verify_results
+      changed_when: false
+      throttle: 1
 
     - name: Display LISTCAT output
+      tags: verify_libraries
       ansible.builtin.debug:
         var: item.output
       loop: "{{ verify_results.results }}"
