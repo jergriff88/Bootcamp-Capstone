@@ -3,7 +3,7 @@
   environment: "{{ environment_vars }}"
   collections:
     - ibm.ibm_zos_core
-  tasks:
+  block:
     # racf_group: TEAM01
     # connect_users_to_racf_group: false
     - name: Create DEV and TEST JCL libraries
