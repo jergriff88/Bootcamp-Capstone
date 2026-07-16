@@ -1,21 +1,11 @@
 ---
 - name: Create DEV and TEST libraries for existing z/OS users
-  hosts: zoslab
-  gather_facts: false
-
   environment: "{{ environment_vars }}"
-
-  vars:
-    user_hlqs:
-      - USER01
-      - USER02
-      - USER03
-
-    environments:
-      - DEV
-      - TEST
-
-  tasks:
+  collections:
+    - ibm.ibm_zos_core
+  block:
+    # racf_group: TEAM01
+    # connect_users_to_racf_group: false
     - name: Create DEV and TEST JCL libraries
       ibm.ibm_zos_core.zos_data_set:
         name: "{{ item.0 }}.{{ item.1 }}.JCL"
@@ -33,7 +23,7 @@
         label: "{{ item.0 }}.{{ item.1 }}.JCL"
       register: library_results
 
-    - name: Display DEV and TEST library creation results
+    - name: Display DEV and TEST library results
       ansible.builtin.debug:
         msg: >-
           Library {{ item.item.0 }}.{{ item.item.1 }}.JCL
