@@ -5,9 +5,6 @@
 
   environment: "{{ environment_vars }}"
 
-  collections:
-    - ibm.ibm_zos_core
-
   vars:
     racf_group: TEAM01
     group_owner: IBMUSER

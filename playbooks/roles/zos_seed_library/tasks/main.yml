@@ -6,22 +6,22 @@
     var: library
 # end debug
 
-- name: Find members for {{ library }}
+- name: Find members for {{ zos_seed_library_library }}
   ansible.builtin.find:
-    paths: "{{ seed_base }}/{{ library }}"
+    paths: "{{ seed_base }}/{{ zos_seed_library_library }}"
     recurse: false
     file_type: file
   delegate_to: localhost
-  register: member_files
+  register: zos_seed_library_member_files
 
 # debug
 - name: Show members found
   ansible.builtin.debug:
-    var: member_files.files
+    var: zos_seed_library_member_files.files
 # end debug
 
 - name: Copy members
   ansible.builtin.include_tasks: copy_members.yml
-  loop: "{{ member_files.files }}"
+  loop: "{{ zos_seed_library_member_files.files }}"
   loop_control:
     loop_var: member

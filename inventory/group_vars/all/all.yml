@@ -1,6 +1,6 @@
-PYZ: "/usr/lpp/IBM/cyp/v3r11/pyz"
-ZOAU: "/usr/lpp/IBM/zoautil"
-FILE_XFER_DIR: "../data"
+pyz: "/usr/lpp/IBM/cyp/v3r11/pyz"
+zoau: "/usr/lpp/IBM/zoautil"
+file_xfer_dir: "../data"
 
 environment_vars:
   _BPXK_AUTOCVT: "ON"

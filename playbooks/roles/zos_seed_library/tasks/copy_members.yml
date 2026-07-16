@@ -6,7 +6,7 @@
       "{{ hlq }}.{{ mlq }}.{{ library }}({{ member.path | basename | splitext | first | upper }})"
 # end debug
 
-- name: Copy {{ member.path | basename }} to {{ library }}
+- name: Copy member to {{ library }}/{{ member.path | basename }}
   block:
     - name: Copy member
       ibm.ibm_zos_core.zos_copy:
@@ -20,4 +20,4 @@
       ansible.builtin.debug:
         msg: >
           FAILED: "{{ member.path | basename }}" -> "{{ hlq }}.{{ mlq }}.{{ library }}"
-          Reason: "{{ ansible_failed_result.msg }}
+          Reason: "{{ ansible_failed_result.msg }}"

@@ -9,14 +9,16 @@
   ansible.builtin.file:
     path: "{{ local_dir }}"
     state: directory
+    mode: "0755"
   delegate_to: 127.0.0.1
 
 - name: Run command on USS command line 
   ansible.builtin.command: 
     cmd: echo ok
+  changed_when: false
 
-
-- debug:
+- name: Display dataset name
+  ansible.builtin.debug:
     msg:
       - "dataset_name={{ dataset_name }}"
 

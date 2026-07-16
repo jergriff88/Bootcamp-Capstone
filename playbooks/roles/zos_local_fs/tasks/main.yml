@@ -2,3 +2,4 @@
   file:
     path: "{{ dirname }}"
     state: directory
+    mode: "0755"

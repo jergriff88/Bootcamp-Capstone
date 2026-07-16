@@ -5,9 +5,6 @@
 
   environment: "{{ environment_vars }}"
 
-  collections:
-    - ibm.ibm_zos_core
-
   vars:
     user_hlqs:
       - USER01
