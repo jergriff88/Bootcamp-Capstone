@@ -1,0 +1,13 @@
+# .ansible-lint
+---
+profile: min
+
+# Rules that show as warnings but don't fail the build
+warn_list:
+  - risky-file-permissions
+  - no-changed-when
+  - fqcn
+  - name[template]
+  - var-naming[no-role-prefix]
+  - yaml[new-line-at-end-of-file]
+  - yaml[trailing-spaces]
