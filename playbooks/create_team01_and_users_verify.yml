@@ -1,30 +1,13 @@
 ---
 - name: Create RACF group TEAM01 and users
-  hosts: zoslab
-  gather_facts: false
-
   environment: "{{ environment_vars }}"
-
-  vars:
-    racf_group: TEAM01
-    group_owner: IBMUSER
-    default_password: NEWPASS
-
-    users:
-      - userid: USER01
-        name: Development User 01
-
-      - userid: USER02
-        name: Development User 02
-
-      - userid: USER03
-        name: Development User 03
-
-  tasks:
+  collections:
+    - ibm.ibm_zos_core
+  block:
     - name: Check whether RACF group TEAM01 exists
       ibm.ibm_zos_core.zos_tso_command:
         commands:
-          - LISTGRP {{ racf_group }}
+          - "LISTGRP {{ racf_group }}"
         max_rc: 8
       register: group_check
       changed_when: false
@@ -33,7 +16,7 @@
     - name: Create RACF group TEAM01
       ibm.ibm_zos_core.zos_tso_command:
         commands:
-          - ADDGROUP {{ racf_group }} OWNER({{ group_owner }})
+          - "ADDGROUP {{ racf_group }} OWNER({{ group_owner }})"
         max_rc: 4
       when:
         - group_check.output is defined
@@ -44,7 +27,7 @@
     - name: Check whether RACF users exist
       ibm.ibm_zos_core.zos_tso_command:
         commands:
-          - LISTUSER {{ item.userid }}
+          - "LISTUSER {{ item.userid }}"
         max_rc: 8
       loop: "{{ users }}"
       loop_control:
@@ -119,3 +102,4 @@
     - name: Display USER01, USER02, and USER03 information
       ansible.builtin.debug:
         var: verify_users.output
+        

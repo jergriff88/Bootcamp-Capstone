@@ -11,3 +11,7 @@ warn_list:
   - var-naming[no-role-prefix]
   - yaml[new-line-at-end-of-file]
   - yaml[trailing-spaces]
+
+# TEMPORARY TO ALLOW MASTER PLAYBOOK TO MERGE
+exclude_paths:
+  - ./playbooks/

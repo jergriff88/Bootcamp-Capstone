@@ -1,0 +1,24 @@
+---
+- name: Master Playbook for Ansible (Roles folder)
+  block:
+    - name: Bootstrap message
+      ansible.builtin.debug:
+        msg: "Starting master playbook --"
+
+    - name: Prepare Local File System
+      ansible.builtin.include_tasks: roles/zos_local_fs/tasks/main.yml
+
+    - name: Copy Seeded Members into Libraries
+      ansible.builtin.include_tasks: playbooks/roles/zos_seed_library/tasks/main.yml
+      vars:
+        library: "{{ item }}" 
+      loop: "{{ subfolders }}" 
+
+    - name: Submit Library Provisioning Job
+      ansible.builtin.include_tasks: playbooks/roles/submit_library_provisioning_job/tasks/main.yml
+
+    - name: Submit zOS Job
+      ansible.builtin.include_tasks: playbooks/roles/zos_job_run/tasks/main.yml
+
+    - name: Fetch Results
+      ansible.builtin.include_tasks: playbooks/roles/zos_dataset_fetch/tasks/main.yml

@@ -1,14 +1,9 @@
 ---
 - name: Ping z/OS node
-  hosts: zos
-  gather_facts: false
+  ansible.builtin.ping: {}
+  register: result
   environment: "{{ environment_vars }}"
 
-  tasks:
-    - name: Pinging host
-      ansible.builtin.ping: {}
-      register: result
-
-    - name: Response
-      ansible.builtin.debug:
-        msg: "{{ result.ping }}"
+- name: Response
+  ansible.builtin.debug:
+    msg: "{{ result.ping }}"

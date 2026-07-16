@@ -1,0 +1,53 @@
+---
+- name: Master Playbook for Ansible
+  hosts: zoslab
+  gather_facts: false
+  tasks:
+    - name: Bootstrap message
+      ansible.builtin.debug:
+        msg: "Starting master playbook --"
+
+    - name: Ping ZOS
+      ansible.builtin.include_tasks: zos_ping.yml
+
+    - name: Create Team, Users, and Verify
+      ansible.builtin.include_tasks: create_team01_and_users_verify.yml
+      vars:
+        racf_group: TEAM01
+        group_owner: IBMUSER
+        default_password: NEWPASS
+        users:
+          - userid: USER01
+            name: "Development User 01"
+          - userid: USER02
+            name: "Development User 02"
+          - userid: USER03
+            name: "Development User 03"
+
+    - name: Create Dev and Test Libraries
+      ansible.builtin.include_tasks: create_dev_test_libraries.yml
+      vars:
+        user_hlqs:
+          - USER01
+          - USER02
+          - USER03
+        environments:
+          - DEV
+          - TEST
+        libraries: "{{ user_hlqs | product(environments) | list }}"
+
+    - name: Run Master Playbook for Roles
+      ansible.builtin.include_tasks: roles-master-playbook.yml
+      vars: 
+        seed_base: "/playbooks/seed_files"
+        subfolders: 
+          - PROCLIB
+          - JCL
+          - ASM
+          - COBOL
+          - REXX
+
+    - name: Submit JCL
+      ansible.builtin.include_tasks: submit_local_jcl.yml
+      vars:
+        hlq: "{{ hlq }}"

@@ -1,18 +1,13 @@
 ---
 - name: Submit local JCL to JES2
-  hosts: zoslab
-  gather_facts: false
   environment: "{{ environment_vars }}"
-
-  vars:
-    hlq: "{{ hlq }}"
-
-  tasks:
+  collections:
+    - ibm.ibm_zos_core
+  block:
     - name: Render JCL template to local file
       ansible.builtin.template:
         src: provdev.jcl.j2
         dest: "{{ playbook_dir }}/tmp_jcl/rendered.jcl"
-        mode: "0644"
       delegate_to: localhost
       connection: local
 

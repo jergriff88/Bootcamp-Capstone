@@ -1,22 +1,11 @@
 ---
 - name: Create DEV and TEST libraries for existing z/OS users
-  hosts: zoslab
-  gather_facts: false
-
   environment: "{{ environment_vars }}"
-
-  vars:
-    user_hlqs:
-      - USER01
-      - USER02
-      - USER03
-
-    environments:
-      - DEV
-      - TEST
-    libraries: "{{ user_hlqs | product(environments) | list }}"
-
-  tasks:
+  collections:
+    - ibm.ibm_zos_core
+  block:
+    # racf_group: TEAM01
+    # connect_users_to_racf_group: false
     - name: Create DEV and TEST JCL libraries
       tags: create_libraries
       ibm.ibm_zos_core.zos_data_set:
